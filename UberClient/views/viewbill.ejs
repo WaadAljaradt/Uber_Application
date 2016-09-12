@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+      <meta charset="utf-8">
+      <link rel='stylesheet' type='text/css' href='public/stylesheets/style.css' />
+      <link rel='stylesheet' type='text/css' href='css/print.css' media="print" />
+      <script type='text/javascript' src='js/jquery-1.3.2.min.js'></script>
+      <script type='text/javascript' src='js/example.js'></script>
+      <title>Directions service</title>
+      <style>
+         /*
+         CSS-Tricks Example
+         by Chris Coyier
+         http://css-tricks.com
+         */
+         * { margin: 0; padding: 0;}
+         body { font: 14px/1.4 Georgia, serif; }
+         #page-wrap { width: 800px; margin: 0 auto; }
+         textarea { border: 0; font: 14px Georgia, Serif; overflow: hidden; resize: none; }
+         table { border-collapse: collapse; }
+         table td, table th { border: 1px solid black; padding: 5px; }
+         #header { height: 15px; width: 100%; margin: 20px 0; background: #222; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
+         #address { width: 250px; height: 150px; float: left; }
+         #customer { overflow: hidden; }
+         #logo { text-align: right; float: right; position: relative; margin-top: 25px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden; }
+         #logo:hover, #logo.edit { border: 1px solid #000; margin-top: 0px; max-height: 125px; }
+         #logoctr { display: none; }
+         #logo:hover #logoctr, #logo.edit #logoctr { display: block; text-align: right; line-height: 25px; background: #eee; padding: 0 5px; }
+         #logohelp { text-align: left; display: none; font-style: italic; padding: 10px 5px;}
+         #logohelp input { margin-bottom: 5px; }
+         .edit #logohelp { display: block; }
+         .edit #save-logo, .edit #cancel-logo { display: inline; }
+         .edit #image, #save-logo, #cancel-logo, .edit #change-logo, .edit #delete-logo { display: none; }
+         #customer-title { font-size: 20px; font-weight: bold; float: left; }
+         #meta { margin-top: 1px; width: 300px; float: right; }
+         #meta td { text-align: right;  }
+         #meta td.meta-head { text-align: left; background: #eee; }
+         #meta td textarea { width: 100%; height: 20px; text-align: right; }
+         #items { clear: both; width: 100%; margin: 30px 0 0 0; border: 1px solid black; }
+         #items th { background: #eee; }
+         #items textarea { width: 80px; height: 50px; }
+         #items tr.item-row td { border: 0; vertical-align: top; }
+         #items td.description { width: 300px; }
+         #items td.item-name { width: 175px; }
+         #items td.description textarea, #items td.item-name textarea { width: 100%; }
+         #items td.total-line { border-right: 0; text-align: right; }
+         #items td.total-value { border-left: 0; padding: 10px; }
+         #items td.total-value textarea { height: 20px; background: none; }
+         #items td.balance { background: #eee; }
+         #items td.blank { border: 0; }
+         #terms { text-align: center; margin: 20px 0 0 0; }
+         #terms h5 { text-transform: uppercase; font: 13px Helvetica, Sans-Serif; letter-spacing: 10px; border-bottom: 1px solid black; padding: 0 0 8px 0; margin: 0 0 8px 0; }
+         #terms textarea { width: 100%; text-align: center;}
+         textarea:hover, textarea:focus, #items td.total-value textarea:hover, #items td.total-value textarea:focus, .delete:hover { background-color:#EEFF88; }
+         .delete-wpr { position: relative; }
+         .delete { display: block; color: #000; text-decoration: none; position: absolute; background: #EEEEEE; font-weight: bold; padding: 0px 3px; border: 1px solid; top: -6px; left: -22px; font-family: Verdana; font-size: 12px; }
+         html, body {
+         height: 100%;
+         margin: 0;
+         padding: 0;
+         }
+         #map {
+         height: 30%;
+         width :30%;
+         left  :50%;
+         top : 40%;
+         }
+         #floating-panel {
+         position: absolute;
+         top: 10px;
+         left: 25%;
+         z-index: 5;
+         background-color: #fff;
+         padding: 5px;
+         border: 1px solid #999;
+         text-align: center;
+         font-family: 'Roboto','sans-serif';
+         line-height: 30px;
+         padding-left: 10px;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="map"></div>
+      <script>
+         function initMap() {
+           var directionsService = new google.maps.DirectionsService;
+           var directionsDisplay = new google.maps.DirectionsRenderer;
+           var map = new google.maps.Map(document.getElementById('map'), {
+             zoom: 14,
+             center: {lat: 37.3382 , lng: -121.8863 }
+           });
+           directionsDisplay.setMap(map);
+         
+           
+             calculateAndDisplayRoute(directionsService, directionsDisplay);
+           
+           document.getElementById('start').addEventListener('change', onChangeHandler);
+           document.getElementById('end').addEventListener('change', onChangeHandler);
+         }
+         
+         function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+           directionsService.route({
+             origin: new google.maps.LatLng(37.3562569, -121.8948289),
+             destination:new google.maps.LatLng(37.3351916, -121.8832602),
+             travelMode: google.maps.TravelMode.DRIVING
+           }, function(response, status) {
+             if (status === google.maps.DirectionsStatus.OK) {
+               directionsDisplay.setDirections(response);
+             } else {
+               window.alert('Directions request failed due to ' + status);
+             }
+           });
+         }
+         
+             
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap"
+         async defer></script>
+      <div id="page-wrap">
+      <p id="header">UBER RIDE INVOICE</p>
+      <div id="identity">
+      <p id="address">Customer Name :
+         </br>Phone: (555) 555-5555
+         </br>Ride Date : 01/05/2015
+         </br>DriverName : driver1
+      </p>
+      </div>
+      <div id="map">Source :</br><p>destination:</p></div>
+      
+      <div style="clear:both"></div>
+      <br><br><br>
+      <div id="customer">
+         <p id="customer-title">Ride Cost : $6.75</p>
+         <table id="meta">
+            <tr>
+               <td class="meta-head">Distance</td>
+               <td>
+                  <p>1.8 Miles</p>
+               </td>
+            </tr>
+            <tr>
+               <td class="meta-head">Duration</td>
+               <td>
+                  <p id="date">20 Minutes, 14 sec</p>
+               </td>
+            </tr>
+            <tr>
+               <td class="meta-head">Average Speed</td>
+               <td>
+                  <div class="due">30mph</div>
+               </td>
+            </tr>
+         </table>
+      </div>
+      <table id="items">
+         <tr>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Base Fare</td>
+            <td class="total-value">
+               <div id="subtotal">$2.00</div>
+            </td>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Total Fare</td>
+            <td class="total-value">
+               <div id="subtotal">$6.75</div>
+            </td>
+         </tr>
+         <tr>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Distance Fare</td>
+            <td class="total-value">
+               <div id="total">$4.00</div>
+            </td>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Billed to card</td>
+            <td class="total-value">
+               <div id="total">$6.75</div>
+            </td>
+         </tr>
+         <tr>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Time</td>
+            <td class="total-value">
+               <p id="paid">$2.00</p>
+            </td>
+            <td colspan="2" class="blank"> </td>
+            <td colspan="2" class="total-line">Outstanding Balance</td>
+            <td class="total-value">
+               <p id="paid">$0.00</p>
+            </td>
+         </tr>
+      </table>
+      <div id="terms">
+         <h5>Terms</h5>
+         <p>Prices may vary based on availabiliy and time</p>
+      </div>
+   </body>
+</html>
