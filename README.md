@@ -4,7 +4,6 @@ PROJECT ARCHITECTURE
 
 In this project the Client is developed using the MEAN stack that is MongoDB, Express.JS, AngularJS and NodeJS. Express.JS handles the server and the routing. On the Server side the Node.JS server returns the results from the MySQL database to the RabbitMQ Message passing service, which returns the response to the client. MongoDB is also used to store and display certain type of data to get the full advantage of its advanced NoSQL Features. Google maps APIs has been extensively used to generate 
 
-Description of components in application DB Schema/strategy
  
 Customer	
 The user can sign in, or become a member of the service using the sign up. The admin can add or remove a user also. The user after logging in can Request Ride, View History and view the bill of each ride. The user table in the database not only has a full description of the user like first name, last name address email and password but also the credit card is stored securely. The password field is hashed to improve security. The customer has the ability to delete his own account.
